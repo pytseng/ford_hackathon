@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>MEESEEKS</title>
+<script type="text/javascript" src="{% static "parking/js/index.js" %}"></script>
+<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon" href="{% static "parking/img/favicon.ico" %}" />
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">	
+<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static "parking/css/index.css" %}">
+
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.282.1.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid bg-1 text-center">
+
+
+
+
+	<h1><b>Meeseeks</b></h1>
+	<h2>Find available parking spots by AVs</h2>
+<!-- <div class="scene">
+  <div class="wrapper">
+    <ul class="ball">
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+      <li class="ring"></li>
+    </ul>
+  </div>
+</div> -->
+<!-- <div class="circle">
+  <span class="circle__el"></span>
+</div>   
+<div class="circle">
+  <span class="circle__el circle__el_two"></span>
+</div>    
+<div class="circle">
+  <span class="circle__el circle__el_three"></span>
+</div>
+<div class="circle">
+  <span class="circle__el circle__el_four"></span>
+</div> -->
+	<span>Updated at: </span><span id="updated_time"></span>
+	<br>
+	<!-- <div class="image_wrap_row"> -->
+		<div id="map_container">
+			<img id="map_img" class="img-fluid the_map" src="https://s3.amazonaws.com/hackathon2018-meeseeks/h.png">
+
+			<!-- <img id="map_img" class="img-fluid the_map" src="{% static "parking/img/h.png" %}">	 -->
+		</div>
+		
+		<!-- <img id="map_img" class="img-fluid the_map" src="{% static "parking/img/parking_lot.png" %}"> -->
+	<!-- </div> -->
+		
+	<br>
+<div class="row">
+  <div class="col-12 col-md-6 text-left">
+  		<div class="row info_row">
+		  <div class="col-4">
+		  	<img class="info" src="{% static "parking/img/star_black.png" %}"><span>Normal</span>
+		  </div>
+		  <div class="col-4">
+		  	<img class="info" src="{% static "parking/img/star_blue.png" %}"><span>Handicap</span>
+		  </div>
+		  <div class="col-4">
+		  	<img class="info" src="{% static "parking/img/star_green.png" %}"><span>EV</span>
+		  </div>		  
+		</div>  	
+  		<div class="row info_row">
+		  <div class="col-4">
+		  	<img class="info" src="{% static "parking/img/fill_green.png" %}"><span>open</span>
+		  </div>
+		  <div class="col-4">
+		  	<img class="info" src="{% static "parking/img/fill_red.png" %}"><span>filled</span>
+		  </div>
+		</div>
+  		<div class="row info_row">
+		  <div class="col-4">
+		  	<img class="info" src="{% static "parking/img/border_thick.png" %}"><span>Just detected</span>
+		  </div>
+		  <div class="col-4">
+		  	<img class="info" src="{% static "parking/img/border_thin.png" %}"><span>awhile ago</span>
+		  </div>
+		</div>
+
+  </div>
+  <div class="col-12 col-sm-12 col-md-6">
+	<h4>Auto Update</h4>
+	<label class="switch">
+	  <input name="auto_upload" id= "auto_upload" type="checkbox" checked>
+	  <span class="slider"></span>
+	</label>  	
+  </div>
+</div>
+<!-- 	<div class="btn-group btn-group-toggle" data-toggle="buttons">
+	  <label class="btn btn-secondary active">
+	    <input type="radio" name="options" id="option1" autocomplete="off" checked> On
+	  </label>
+	  <label class="btn btn-secondary">
+	    <input type="radio" name="options" id="option2" autocomplete="off"> Off
+	  </label>
+	</div> -->
+
+
+	
+
+</div>
+
+<!-- reload -->
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+function reloader() {
+	var refreshIntervalId = setInterval(function() {
+	    var myImageElement = document.getElementById('map_img');
+	    // myImageElement.src = '{% static "parking/img/h.png" %}?rand=' + Math.random();
+	    myImageElement.src = 'https://s3.amazonaws.com/hackathon2018-meeseeks/h.png?rand=' + Math.random();
+
+	    var d = new Date();
+		$("#updated_time")[0].innerHTML = d.toLocaleTimeString('en-US');
+	}, 4000);
+	($('input[name=auto_upload]').change(function(){
+	    if($(this).is(':checked')) {
+	    	reloader();
+	    }else{
+	    	clearInterval(refreshIntervalId);
+	    }
+	}))
+}
+var d = new Date();
+$("#updated_time")[0].innerHTML = d.toLocaleTimeString('en-US');
+reloader();
+</script>
+
+</body>
+</html>
+
